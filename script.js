@@ -11,6 +11,7 @@ window.onload = function() {
     var applee;
     var widthInBlocks = canvasWidth / blockSize;
     var heightInBlocks = canvasHeight / blockSize;
+    var score;
     
     init();
     
@@ -23,11 +24,8 @@ window.onload = function() {
         document.body.appendChild(canvas);
         
         ctx = canvas.getContext('2d');
-        var positions = [[6,4], [5,4], [4,4], [3,4], [2,4], [1,4]]; 
-        var direction = "right";
-        snakee = new Snake(positions, direction);
-        applee = new Apple([10,10]);
-        refreshCanvas();
+        
+        restart();
     }
     
     function refreshCanvas() 
@@ -36,11 +34,12 @@ window.onload = function() {
         snakee.advance();
         if(snakee.checkCollision())
         {
-            // TO-DO GAME OVER
+            gameOver();
         } else 
         {
             if(snakee.isEatingApple(applee))
             {
+                score++;
                 snakee.ateApple = true;
                 do
                 {
@@ -50,9 +49,35 @@ window.onload = function() {
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
             snakee.draw();
             applee.draw();
+            drawScore();
             setTimeout(refreshCanvas, delay);
         }
         
+    }
+    
+    function restart()
+    {
+        score = 0;
+        var positions = [[6,4], [5,4], [4,4], [3,4], [2,4]]; 
+        var direction = "right";
+        snakee = new Snake(positions, direction);
+        applee = new Apple([10,10]);
+        refreshCanvas();
+    }
+    
+    function drawScore()
+    {
+        ctx.save();
+        ctx.fillText(score.toString(), 5, canvasHeight - 5);
+        ctx.restore();
+    }
+    
+    function gameOver()
+    {
+        ctx.save();
+        ctx.fillText("Game Over", 5, 15);
+        ctx.fillText("Appuyer sur la touche Espace pour rejouer", 5, 30);
+        ctx.restore();
     }
     
     function drawBlock(ctx, position)
@@ -222,6 +247,9 @@ window.onload = function() {
                 case 40:
                     newDirection = "down";
                     break;
+                case 32: //case key down "space"
+                    restart();
+                    return;
                 default:
                     return;
             }
