@@ -1,6 +1,6 @@
 # Web snake game
 
-This is a game of the old snake game that is on most cellular phone this a long time ago.
+This is a game of the old snake game that is on most cellular phone from a long time ago.
 
 ## Documentation
 
